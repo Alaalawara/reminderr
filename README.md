@@ -4,7 +4,7 @@
 - 🔭 I’m currently working on [reminderr](https://reminderr.vercel.app/)
 
 <h3 align="left">Connect with me:</h3>
-x : https://reminderr.vercel.app/
+x : https://x.com/loops_infinity
 <p align="left">
 </p>
 
