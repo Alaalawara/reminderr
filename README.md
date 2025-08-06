@@ -1,7 +1,7 @@
 <h1 align="center">Hi 👋, I'm Swaraj</h1>
 <h3 align="center">A passionate Full stack developer from India</h3>
 
-- 🔭 I’m currently working on [reminderr](https://reminderr.vercel.app/)
+- 🔭 I’m currently working on [reminderr](https://reminderr-app.vercel.app/)
 
 <h3 align="left">Connect with me:</h3>
 x : https://x.com/loops_infinity
@@ -14,4 +14,4 @@ x : https://x.com/loops_infinity
 About:
 reminderr - Let me remind you!
 
-Live Demo: https://reminderr.vercel.app/
+Live Demo: https://reminderr-app.vercel.app/
