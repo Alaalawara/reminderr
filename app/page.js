@@ -19,6 +19,7 @@ export default function Home() {
   const [reminder, setReminder] = useState(null);
   const [completedAlert, setCompletedAlert] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(false);
 
   // Live clock
   const [now, setNow] = useState(new Date());
@@ -37,7 +38,7 @@ export default function Home() {
       if (d.getHours() == h && d.getMinutes() == m) {
         setCompletedAlert(reminder.text);
         setReminder(null);
-        if (audioRef.current) {
+        if ( soundEnabled && audioRef.current) {
           audioRef.current.currentTime = 0;
           audioRef.current.play();
         }
@@ -45,7 +46,7 @@ export default function Home() {
       }
     }, 1000);
     return () => clearInterval(checker);
-  }, [reminder]);
+  }, [reminder, soundEnabled]);
 
   // Format helpers
   const two = n => n < 10 ? "0" + n : n;
@@ -176,21 +177,44 @@ export default function Home() {
               Add time for when you need to be reminded
             </div>
           </span>
-            <input
-              type="text"
-              placeholder="I need to..."
-              className={`w-full mb-3 px-4 py-2 flex rounded-md bg-gray-900 text-white outline-none transition-all duration-150 ${reminderText ? "border-2 border-gray-800" : "border border-gray-900"}`}
-              value={reminderText}
-              onChange={e => setReminderText(e.target.value)}
-              autoFocus
-            />
-            <label htmlFor="reminderTime" className="text-white/60 block mb-1 text-sm">Set a time</label>
-            <input
-              type="time"
-              className={`w-full mb-3 px-4 py-2 rounded-md bg-gray-900 text-white outline-none transition-all duration-150 ${reminderTime ? "border-2 border-gray-800" : "border border-gray-900"}`}
-              value={reminderTime}
-              onChange={e => setReminderTime(e.target.value)}
-            />
+          <input
+            type="text"
+            placeholder="I need to..."
+            className={`w-full mb-3 px-4 py-2 flex rounded-md bg-gray-900 text-white outline-none transition-all duration-150 ${reminderText ? "border-2 border-gray-800" : "border border-gray-900"}`}
+            value={reminderText}
+            onChange={e => setReminderText(e.target.value)}
+            autoFocus
+          />
+          <span className="grid grid-cols-2 justify-around w-full">
+            <span className="flex flex-col">
+              <label htmlFor="reminderTime" className="text-white/60 block mb-1 text-sm">Set a time</label>
+              <input
+                type="time"
+                className={`w-full mb-3 px-4 py-2 rounded-md bg-gray-900 text-white outline-none transition-all duration-150 ${reminderTime ? "border-2 border-gray-800" : "border border-gray-900"}`}
+                value={reminderTime}
+                onChange={e => setReminderTime(e.target.value)}
+              />
+            </span>
+            <span className="flex flex-col items-end">
+              <label htmlFor="reminderTime" className="text-white/60 block mb-1 text-sm">sound</label>
+              {/* Sound toggle*/}
+                <button
+                  className={`w-12 h-7 rounded-full bg-neutral-900 border-2 border-neutral-700 p-1 flex items-center transition-colors duration-200 focus:outline-none`}
+                  onClick={() => setSoundEnabled(x => !x)}
+                  aria-label="Enable or disable reminder sound"
+                >
+                  <span
+                    className={`
+        block w-5 h-5 rounded-full bg-white shadow transform transition-transform duration-200
+        ${soundEnabled ? 'translate-x-5' : ''}
+      `}
+                  />
+                </button>
+                <span className="text-white text-sm font-medium select-none">
+                  Sound {soundEnabled ? 'On' : 'Off'}
+                </span>
+            </span>
+          </span>
           <button
             type="submit"
             className="w-full py-2 rounded bg-white text-black font-bold hover:bg-gray-200 transition-colors mb-2 cursor-pointer"
@@ -211,7 +235,7 @@ export default function Home() {
             className="absolute top-1 right-1 w-5 h-5 flex items-center justify-center text-white bg-transparent hover:text-red-400 text-[10px] focus:outline-none"
             aria-label="Close reminder alert"
           >✖</button>
-          <span className="font-bold mb-1 flex flex-row">Reminder completed</span>
+          <span className="font-bold text-xs mb-1 flex flex-row">Reminder completed</span>
           <span className="italic text-gray-300 text-center break-words max-w-[85vw] sm:max-w-xs">{truncateWords(completedAlert, 15)}</span>
         </div>
       )}
