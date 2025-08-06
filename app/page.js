@@ -20,6 +20,7 @@ export default function Home() {
   const [completedAlert, setCompletedAlert] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(false);
+  const [audioUnlocked, setAudioUnlocked] = useState(false);
 
   // Live clock
   const [now, setNow] = useState(new Date());
@@ -38,7 +39,7 @@ export default function Home() {
       if (d.getHours() == h && d.getMinutes() == m) {
         setCompletedAlert(reminder.text);
         setReminder(null);
-        if ( soundEnabled && audioRef.current) {
+        if (soundEnabled && audioRef.current && audioUnlocked) {
           audioRef.current.currentTime = 0;
           audioRef.current.play();
         }
@@ -91,6 +92,31 @@ export default function Home() {
 
   return (
     <div className="relative w-screen h-screen bg-black overflow-hidden">
+      {/* tap to enable sound */}
+      {!audioUnlocked && (
+        <div className="fixed z-50 inset-0 bg-black/60 flex items-center justify-center">
+          <button
+            className="px-6 py-3 bg-white rounded-xl shadow font-bold text-black text-lg"
+            onClick={() => {
+              if (audioRef.current) {
+                audioRef.current.currentTime = 0;
+                audioRef.current.muted = true;
+                audioRef.current.play().then(() => {
+                  audioRef.current.pause();
+                  audioRef.current.muted = false;
+                }).finally(() => {
+                  setAudioUnlocked(true);
+                });
+              } else {
+                setAudioUnlocked(true);
+              }
+            }}
+          >
+            Tap to Enable Reminder Sound
+          </button>
+        </div>
+      )}
+
       {/* Top control button */}
       <button
         className={`
@@ -198,21 +224,21 @@ export default function Home() {
             <span className="flex flex-col items-end">
               <label htmlFor="reminderTime" className="text-white/60 block mb-1 text-sm">sound</label>
               {/* Sound toggle*/}
-                <button
-                  className={`w-12 h-7 rounded-full bg-neutral-900 border-2 border-neutral-700 p-1 flex items-center transition-colors duration-200 focus:outline-none`}
-                  onClick={() => setSoundEnabled(x => !x)}
-                  aria-label="Enable or disable reminder sound"
-                >
-                  <span
-                    className={`
+              <button
+                className={`w-12 h-7 rounded-full bg-neutral-900 border-2 border-neutral-700 p-1 flex items-center transition-colors duration-200 focus:outline-none`}
+                onClick={() => setSoundEnabled(x => !x)}
+                aria-label="Enable or disable reminder sound"
+              >
+                <span
+                  className={`
         block w-5 h-5 rounded-full bg-white shadow transform transition-transform duration-200
         ${soundEnabled ? 'translate-x-5' : ''}
       `}
-                  />
-                </button>
-                <span className="text-white text-sm font-medium select-none">
-                  Sound {soundEnabled ? 'On' : 'Off'}
-                </span>
+                />
+              </button>
+              <span className="text-white text-sm font-medium select-none">
+                Sound {soundEnabled ? 'On' : 'Off'}
+              </span>
             </span>
           </span>
           <button
